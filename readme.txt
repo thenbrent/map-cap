@@ -38,7 +38,7 @@ Or in the Plugin's [WordPress forum](http://wordpress.org/tags/map-cap?forum_id=
 
 == Screenshots ==
 
-1. **Admin Map Cap Settings Page** - Site administrators can choose the custom post type capabilities for each role. The capabilities assigned in this screen recreate the post capabilities as well as allowing subscriber role to publish the custom post type "Auctions". 
+1. **Admin Map Cap Settings Page** - Site administrators can choose the capabilities each role has for each custom post type.
 
 == Changelog ==
 
