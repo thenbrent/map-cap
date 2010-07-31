@@ -34,17 +34,18 @@ function mc_capabilities_settings_page() {
 
 	$post_types = get_post_types( array( 'public'   => true, '_builtin' => false ), 'objects' );
 
-	?>
-	<div class="wrap map-cap-settings">
-	  <h2><?php _e( 'Map Capabilities', 'map-cap' ); ?></h2>
 
-	  <?php if ( !empty( $message ) ) : ?>
-	    <div id="message" class="updated fade"><p><?php echo $message; ?></p></div>
-	  <?php endif; ?>
+	echo '<div class="wrap map-cap-settings">';
+	screen_icon();
+	echo '<h2>' . __( 'Map Capabilities', 'map-cap' ) . '</h2>';
 
-	  <?php if ( !empty( $post_types ) ) { ?>
-		  <form id="map-cap-form" method="post" action="">
-		<?php
+	if ( !empty( $message ) )
+		echo '<div id="message" class="updated fade"><p>' . $message . '</p></div>';
+
+	if ( empty( $post_types ) ) :
+		echo '<p>' . __( 'No custom post types registered.', 'map-cap' ) . '</p>';
+	else:
+		echo '<form id="map-cap-form" method="post" action="">';
 
 		foreach( $post_types as $post_type => $post_type_details ) {
 
@@ -53,7 +54,7 @@ function mc_capabilities_settings_page() {
 
 			wp_nonce_field( 'mc_capabilities_settings' );
 			?>
-			<h3><?php printf( __( '%s Capabilities', 'map-cap' ), $post_type_details->labels->singular_name ); ?></h3>
+			<h3><?php printf( __( '%s Capabilities', 'map-cap' ), $post_type_details->labels->name ); ?></h3>
 
 			<? // Allow publish ?>
 			<div class="map-cap">
@@ -103,11 +104,9 @@ function mc_capabilities_settings_page() {
 			<input type="submit" name="submit" class="button button-primary" value="<?php _e( 'Save', 'map-cap' ); ?>" />
 		</p>
 		</form>
-	<?php } else { ?>
-		<p><?php _e( 'No custom post types registered.', 'map-cap' ); ?></p>
-	<?php } ?>
-	</div>
-	<?php
+		<?php
+	endif;
+	echo '</div>';
 }
 
 
