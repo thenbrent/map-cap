@@ -13,7 +13,9 @@ Using custom post types on your site?
 
 Install this plugin to control which roles can publish, edit and delete posts of each custom type.
 
-For the technically endowed, this plugin takes care of mapping meta capabilities for custom post types. If you're developing a plugin that uses custom post types, check out the mc_map_meta_cap function to learn how to control who can do what with your custom post type.
+= For Plugin Developers =
+
+This plugin takes care of mapping meta capabilities for custom post types. If you're developing a plugin that uses custom post types, check out the mc_map_meta_cap function to learn how to control capabilities for your custom post type.
 
 == Installation ==
 
@@ -36,7 +38,7 @@ Or in the Plugin's [WordPress forum](http://wordpress.org/tags/map-cap?forum_id=
 
 == Screenshots ==
 
-1. **Admin Map Cap Settings Page** - Site administrators can choose the custom post type capabilities for each role. The capabilities assigned in this screen recreate the post capabilities for the custom post type "Issues". 
+1. **Admin Map Cap Settings Page** - Site administrators can choose the custom post type capabilities for each role. The capabilities assigned in this screen recreate the post capabilities as well as allowing subscriber role to publish the custom post type "Auctions". 
 
 == Changelog ==
 
