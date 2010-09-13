@@ -34,7 +34,6 @@ function mc_capabilities_settings_page() {
 
 	$post_types = get_post_types( array( 'public'   => true, '_builtin' => false ), 'objects' );
 
-
 	echo '<div class="wrap map-cap-settings">';
 	screen_icon();
 	echo '<h2>' . __( 'Map Capabilities', 'map-cap' ) . '</h2>';
@@ -49,7 +48,7 @@ function mc_capabilities_settings_page() {
 
 		foreach( $post_types as $post_type => $post_type_details ) {
 
-			$post_type_cap	= $post_type_details->capability_type;
+			$post_type_cap 	= $post_type_details->capability_type;
 			$post_type_caps	= $post_type_details->cap;
 
 			wp_nonce_field( 'mc_capabilities_settings' );
@@ -137,7 +136,7 @@ function mc_save_capabilities() {
 			$post_type_cap 	= $post_type_details->capability_type;
 			$post_type_caps	= $post_type_details->cap;
 
-			// Shared capability require to see post's menu
+			// Shared capability required to see post's menu
 			if ( $_POST[ $post_type . '-' . $key . '-publish' ] == 'on' || $_POST[ $post_type . '-' . $key . '-edit' ] == 'on' || $_POST[ $post_type . '-' . $key . '-edit-others' ] == 'on' )
 				$role->add_cap( $post_type_caps->edit_posts );
 			else
