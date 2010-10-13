@@ -4,7 +4,7 @@ Plugin Name: Map Cap
 Plugin URI: https://github.com/thenbrent/map-cap
 Description: Control who can publish, edit and delete custom post types.  Silly name, useful code.
 Author: Brent Shepherd
-Version: 1.0
+Version: 1.1
 Author URI: http://find.brentshepherd.com/
 */
 
@@ -16,7 +16,7 @@ function mc_add_admin_menu() {
 add_action( 'admin_menu', 'mc_add_admin_menu' );
 
 /** 
- * Site admin's may want to allow or disallow users to create, edit and delete custom post type.
+ * Site admins may want to allow or disallow users to create, edit and delete custom post type.
  * This function provides an admin menu for selecting which roles can do what with custom posts.
  **/
 function mc_capabilities_settings_page() { 
@@ -32,7 +32,11 @@ function mc_capabilities_settings_page() {
 		$roles[ $key ]->display_name = $value;
 	}
 
-	$post_types = get_post_types( array( 'public'   => true, '_builtin' => false ), 'objects' );
+	$post_types = get_post_types( array( 'public' => true, '_builtin' => false ) );
+	$dont_touch = get_post_types( array( 'capability_type' => 'post' ) );
+
+	// Don't edit capabilties for any custom post type with "post" as its capability type
+	$post_types = array_diff( $post_types, $dont_touch );
 
 	echo '<div class="wrap map-cap-settings">';
 	screen_icon();
@@ -41,21 +45,23 @@ function mc_capabilities_settings_page() {
 	if ( !empty( $message ) )
 		echo '<div id="message" class="updated fade"><p>' . $message . '</p></div>';
 
+
+
 	if ( empty( $post_types ) ) :
 		echo '<p>' . __( 'No custom post types registered.', 'map-cap' ) . '</p>';
 	else:
 		echo '<form id="map-cap-form" method="post" action="">';
 
-		foreach( $post_types as $post_type => $post_type_details ) {
-
-			$post_type_cap 	= $post_type_details->capability_type;
-			$post_type_caps	= $post_type_details->cap;
+		foreach( $post_types as $post_type ) {
+			
+			$post_type_details 	= get_post_type_object( $post_type );
+			$post_type_cap 		= $post_type_details->capability_type;
+			$post_type_caps		= $post_type_details->cap;
 
 			wp_nonce_field( 'mc_capabilities_settings' );
 			?>
 			<h3><?php printf( __( '%s Capabilities', 'map-cap' ), $post_type_details->labels->name ); ?></h3>
-
-			<? // Allow publish ?>
+			<?php // Allow publish ?>
 			<div class="map-cap">
 				<h4><?php printf( __( "Publish %s", 'map-cap' ), $post_type_details->labels->name ); ?></h4>
 				<?php foreach ( $roles as $role ): ?>
@@ -127,12 +133,17 @@ function mc_save_capabilities() {
 		$roles[ $key ]->display_name = $value;
 	}
 
-	$post_types = get_post_types( array( 'public'   => true, '_builtin' => false ), 'objects' ); 
+	$post_types = get_post_types( array( 'public' => true, '_builtin' => false ) );
+	$dont_touch = get_post_types( array( 'capability_type' => 'post' ) );
+
+	// Don't edit capabilties for any custom post type with "post" as its capability type
+	$post_types = array_diff( $post_types, $dont_touch );
 
 	foreach ( $roles as $key => $role ) {
+		
+		foreach( $post_types as $post_type ) {
 
-		foreach( $post_types as $post_type => $post_type_details ) {
-
+			$post_type_details = get_post_type_object( $post_type );
 			$post_type_cap 	= $post_type_details->capability_type;
 			$post_type_caps	= $post_type_details->cap;
 
@@ -181,7 +192,7 @@ function mc_save_capabilities() {
 
 /** 
  * Custom posts' meta capabilities are not mapped by WordPress, so need to manually map them.
- * This function is based on the map_meta_cap function in the capabilities.php file
+ * This function is based on the map_meta_cap function in the WordPress core's capabilities.php file
  **/
 function mc_map_meta_cap( $caps, $cap, $user_id, $args ){
 

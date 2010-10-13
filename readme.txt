@@ -3,7 +3,7 @@ Contributors: thenbrent
 Tags: capabilities, roles, custom post types
 Requires at least: 3.0
 Tested up to: 3.0
-Stable tag: 1.0
+Stable tag: 1.1
 
 Control who can publish, edit and delete custom post types.  Silly name, useful code.
 
@@ -28,19 +28,26 @@ This plugin takes care of mapping meta capabilities for custom post types. If yo
 
 = Why aren't all my custom post types listed on the options page? =
 
-Only post types marked as public and not built-in (eg. page) are included in the list.
+Only post types marked as public and not built-in (eg. page) with a custom capability type are included in the list.
+
+If you are using the [Custom Post Type UI plugin](http://wordpress.org/extend/plugins/custom-post-type-ui/), when adding a custom post type, you must click *View Advanced Options* and change *Capability Type* to something other than post. 
+
+If registering your own custom post type in code, the `$args` array you pass to `register_post_type` function must have `capability_type =>` set to something other than post.
 
 = Where can I make feature requests, get support & report bugs? =
 
-Submit an Issue on the plugin's [Github page](http://github.com/thenbrent/map-cap/issues).
-
-Or in the Plugin's [WordPress forum](http://wordpress.org/tags/map-cap?forum_id=10).
+Add a new post in the WordPress.org [Plugin's Support Forum](http://wordpress.org/tags/map-cap).
 
 == Screenshots ==
 
 1. **Admin Map Cap Settings Page** - Site administrators can choose the capabilities each role has for each custom post type.
 
 == Changelog ==
+
+= 1.1 =
+* Changing capabilities for custom posts with "post" capability type no longer allowed
+* When changing a shared capability, a warning is shown
+* Readme changes to help resolve common issues.
 
 = 1.0 =
 * Initial release.
