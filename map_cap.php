@@ -252,8 +252,9 @@ function mc_map_meta_cap( $caps, $cap, $user_id, $args ){
 				} elseif ( 'trash' == $post->post_status ) {
 					if ('publish' == get_post_meta($post->ID, '_wp_trash_meta_status', true) )
 						$caps[0] = 'delete_published_' . $post_type_cap . '_posts';
+					else $caps[0] = 'delete_' . $post_type_cap . 's';
 				} else {
-					$caps[0] = 'delete_' . $post_type_cap . '_posts';
+					$caps[0] = 'delete_' . $post_type_cap . 's';
 				}
 			} else {
 				$caps[0] = $post_type_caps->edit_others_posts;
