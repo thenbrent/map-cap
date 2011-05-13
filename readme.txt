@@ -3,7 +3,7 @@ Contributors: thenbrent
 Tags: capabilities, roles, custom post types
 Requires at least: 3.1
 Tested up to: 3.1
-Stable tag: 1.2
+Stable tag: 1.1
 
 Control who can publish, edit and delete custom post types.  Silly name, useful code.
 
@@ -46,14 +46,11 @@ Add a new post in the WordPress.org [Plugin's Support Forum](http://wordpress.or
 
 == Changelog ==
 
-= 1.2 =
-* Fixing bug in 
-
-
 = 1.1 =
 * Changing capabilities for custom posts with "post" capability type no longer allowed
 * When changing a shared capability, a warning is shown
 * Readme changes to help resolve common issues.
+* Fixing bug in where a post without the 'author' feature could not be trashed while having Draft status.
 
 = 1.0 =
 * Initial release.
