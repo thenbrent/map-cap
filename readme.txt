@@ -1,9 +1,9 @@
 === Map Cap ===
 Contributors: thenbrent
 Tags: capabilities, roles, custom post types
-Requires at least: 3.0
-Tested up to: 3.0
-Stable tag: 1.1
+Requires at least: 3.1
+Tested up to: 3.1
+Stable tag: 1.2
 
 Control who can publish, edit and delete custom post types.  Silly name, useful code.
 
@@ -15,7 +15,9 @@ Install this plugin to control which roles can publish, edit and delete posts of
 
 = For Plugin Developers =
 
-This plugin takes care of mapping meta capabilities for custom post types. If you're developing a plugin that uses custom post types, check out the mc_map_meta_cap function to learn how to control capabilities for your custom post type.
+Prior to version 3.1, WordPress did not map meta capbilities for custom post types. This plugin offered a way to do that. 
+
+If you're developing a plugin that uses custom post types, WordPress 3.1 and later includes the functionality as explained in the [Capbiltiies](http://codex.wordpress.org/Function_Reference/register_post_type) section of the [Register Post Type](http://codex.wordpress.org/Function_Reference/register_post_type) codex article. 
 
 == Installation ==
 
@@ -43,6 +45,10 @@ Add a new post in the WordPress.org [Plugin's Support Forum](http://wordpress.or
 1. **Admin Map Cap Settings Page** - Site administrators can choose the capabilities each role has for each custom post type.
 
 == Changelog ==
+
+= 1.2 =
+* Fixing bug in 
+
 
 = 1.1 =
 * Changing capabilities for custom posts with "post" capability type no longer allowed
