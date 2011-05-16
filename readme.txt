@@ -54,3 +54,8 @@ Add a new post in the WordPress.org [Plugin's Support Forum](http://wordpress.or
 
 = 1.0 =
 * Initial release.
+
+== Upgrade Notice ==
+
+= 1.1 =
+* Important Upgrade to fix a variety of issues with deleting posts and drafts. Requires WordPress 3.1+
