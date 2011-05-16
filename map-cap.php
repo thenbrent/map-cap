@@ -78,7 +78,7 @@ function mc_capabilities_settings_page() {
 				<h4><?php printf( __( "Edit Own %s", 'map-cap' ), $post_type_details->labels->name  ); ?></h4>
 				<?php foreach ( $roles as $role ): ?>
 				<label for="<?php echo $post_type . '-' . $role->name; ?>-edit">
-				  	<input type="checkbox" id="<?php echo $post_type . '-' . $role->name; ?>-edit" name="<?php echo $post_type . '-' . $role->name; ?>-edit"<?php checked( @$role->capabilities[ 'edit_published_' . $post_type_cap . '_posts' ], 1 ); ?> />
+				  	<input type="checkbox" id="<?php echo $post_type . '-' . $role->name; ?>-edit" name="<?php echo $post_type . '-' . $role->name; ?>-edit"<?php checked( @$role->capabilities[ 'edit_published_' . $post_type_cap . 's' ], 1 ); ?> />
 					<?php echo $role->display_name; ?>
 				</label>
 				<?php endforeach; ?>
@@ -148,38 +148,37 @@ function mc_save_capabilities() {
 			$post_type_cap 	= $post_type_details->capability_type;
 			$post_type_caps	= $post_type_details->cap;
 
-			// Shared capability required to see post's menu
-			if ( @$_POST[ $post_type . '-' . $key . '-publish' ] == 'on' || @$_POST[ $post_type . '-' . $key . '-edit' ] == 'on' || @$_POST[ $post_type . '-' . $key . '-edit-others' ] == 'on' )
+			// Shared capability required to see post's menu & publish posts
+			if ( @$_POST[ $post_type . '-' . $key . '-publish' ] == 'on' || @$_POST[ $post_type . '-' . $key . '-edit' ] == 'on' || @$_POST[ $post_type . '-' . $key . '-edit-others' ] == 'on' ) {
 				$role->add_cap( $post_type_caps->edit_posts );
-			else
-				$role->remove_cap( $post_type_caps->edit_posts );
-
-			// Allow publish
-			if ( @$_POST[ $post_type . '-' . $key . '-publish' ] == 'on' ) {
 				$role->add_cap( $post_type_caps->publish_posts );
 				$role->add_cap( $post_type_caps->delete_post . 's');
 			} else {
+				$role->remove_cap( $post_type_caps->edit_posts );
 				$role->remove_cap( $post_type_caps->publish_posts );
 				$role->remove_cap( $post_type_caps->delete_post . 's');
 			}
 
 			// Allow editing own posts
 			if ( @$_POST[ $post_type . '-' . $key . '-edit' ] == 'on' || @$_POST[ $post_type . '-' . $key . '-edit-others' ] == 'on' ) {
-				$role->add_cap( 'edit_published_' . $post_type_cap . '_posts' );
-				$role->add_cap( 'delete_published_' . $post_type_cap . '_posts' );
-				$role->add_cap( 'edit_private_' . $post_type_cap . '_posts' );
+				$role->add_cap( 'edit_published_' . $post_type_cap . 's' );
+				$role->add_cap( 'edit_private_' . $post_type_cap . 's' );
+				$role->add_cap( 'delete_published_' . $post_type_cap . 's' );
+				$role->add_cap( 'delete_private_' . $post_type_cap . 's' );
 			} else {
 				$role->remove_cap( 'edit_published_' . $post_type_cap . '_posts' );
-				$role->remove_cap( 'delete_published_' . $post_type_cap . '_posts' );
 				$role->remove_cap( 'edit_private_' . $post_type_cap . '_posts' );
+				$role->remove_cap( 'delete_published_' . $post_type_cap . '_posts' );
+				$role->remove_cap( 'delete_private_' . $post_type_cap . '_posts' );
 			}
 
 			// Allow editing other's posts
 			if ( @$_POST[ $post_type . '-' . $key . '-edit-others' ] == 'on' ){
 				$role->add_cap( $post_type_caps->edit_others_posts );
-				$role->add_cap( $post_type_caps->edit_others_posts );
-			} else{
+				$role->add_cap( 'delete_others_' . $post_type_cap . 's' );
+			} else {
 				$role->remove_cap( $post_type_caps->edit_others_posts );
+				$role->remove_cap( 'delete_others_' . $post_type_cap . 's' );
 			}
 
 			// Allow reading private
