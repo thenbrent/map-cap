@@ -149,13 +149,13 @@ function mc_save_capabilities() {
 			$post_type_caps	= $post_type_details->cap;
 
 			// Shared capability required to see post's menu
-			if ( $_POST[ $post_type . '-' . $key . '-publish' ] == 'on' || $_POST[ $post_type . '-' . $key . '-edit' ] == 'on' || $_POST[ $post_type . '-' . $key . '-edit-others' ] == 'on' )
+			if ( @$_POST[ $post_type . '-' . $key . '-publish' ] == 'on' || @$_POST[ $post_type . '-' . $key . '-edit' ] == 'on' || @$_POST[ $post_type . '-' . $key . '-edit-others' ] == 'on' )
 				$role->add_cap( $post_type_caps->edit_posts );
 			else
 				$role->remove_cap( $post_type_caps->edit_posts );
 
 			// Allow publish
-			if ( $_POST[ $post_type . '-' . $key . '-publish' ] == 'on' ) {
+			if ( @$_POST[ $post_type . '-' . $key . '-publish' ] == 'on' ) {
 				$role->add_cap( $post_type_caps->publish_posts );
 				$role->add_cap( $post_type_caps->delete_post . 's');
 			} else {
@@ -164,7 +164,7 @@ function mc_save_capabilities() {
 			}
 
 			// Allow editing own posts
-			if ( $_POST[ $post_type . '-' . $key . '-edit' ] == 'on' || $_POST[ $post_type . '-' . $key . '-edit-others' ] == 'on' ) {
+			if ( @$_POST[ $post_type . '-' . $key . '-edit' ] == 'on' || @$_POST[ $post_type . '-' . $key . '-edit-others' ] == 'on' ) {
 				$role->add_cap( 'edit_published_' . $post_type_cap . '_posts' );
 				$role->add_cap( 'delete_published_' . $post_type_cap . '_posts' );
 				$role->add_cap( 'edit_private_' . $post_type_cap . '_posts' );
@@ -175,13 +175,15 @@ function mc_save_capabilities() {
 			}
 
 			// Allow editing other's posts
-			if ( $_POST[ $post_type . '-' . $key . '-edit-others' ] == 'on' )
+			if ( @$_POST[ $post_type . '-' . $key . '-edit-others' ] == 'on' ){
 				$role->add_cap( $post_type_caps->edit_others_posts );
-			else
+				$role->add_cap( $post_type_caps->edit_others_posts );
+			} else{
 				$role->remove_cap( $post_type_caps->edit_others_posts );
+			}
 
 			// Allow reading private
-			if ( $_POST[ $post_type . '-' . $key . '-private' ] == 'on' )
+			if ( @$_POST[ $post_type . '-' . $key . '-private' ] == 'on' )
 				$role->add_cap( $post_type_caps->read_private_posts);
 			else
 				$role->remove_cap( $post_type_caps->read_private_posts );
