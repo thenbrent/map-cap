@@ -15,9 +15,9 @@ Install this plugin to control which roles can publish, edit and delete posts of
 
 = For Plugin Developers =
 
-Prior to version 3.1, WordPress did not map meta capbilities for custom post types. This plugin offered a way to do that. 
+Prior to version 3.1, WordPress did not map meta capabilities for custom post types. This plugin offered a way to do that. 
 
-If you're developing a plugin that uses custom post types, WordPress 3.1 and later includes the functionality as explained in the [Capbiltiies](http://codex.wordpress.org/Function_Reference/register_post_type) section of the [Register Post Type](http://codex.wordpress.org/Function_Reference/register_post_type) codex article. 
+If you're developing a plugin that uses custom post types, WordPress 3.1 and later includes the functionality as explained in the [Capabiltiies](http://codex.wordpress.org/Function_Reference/register_post_type) section of the [Register Post Type](http://codex.wordpress.org/Function_Reference/register_post_type) codex article. 
 
 == Installation ==
 
