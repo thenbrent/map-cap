@@ -166,10 +166,10 @@ function mc_save_capabilities() {
 				$role->add_cap( 'delete_published_' . $post_type_cap . 's' );
 				$role->add_cap( 'delete_private_' . $post_type_cap . 's' );
 			} else {
-				$role->remove_cap( 'edit_published_' . $post_type_cap . '_posts' );
-				$role->remove_cap( 'edit_private_' . $post_type_cap . '_posts' );
-				$role->remove_cap( 'delete_published_' . $post_type_cap . '_posts' );
-				$role->remove_cap( 'delete_private_' . $post_type_cap . '_posts' );
+				$role->remove_cap( 'edit_published_' . $post_type_cap . 's' );
+				$role->remove_cap( 'edit_private_' . $post_type_cap . 's' );
+				$role->remove_cap( 'delete_published_' . $post_type_cap . 's' );
+				$role->remove_cap( 'delete_private_' . $post_type_cap . 's' );
 			}
 
 			// Allow editing other's posts
