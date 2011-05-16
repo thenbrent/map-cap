@@ -22,7 +22,10 @@ add_action( 'admin_menu', 'mc_add_admin_menu' );
 function mc_capabilities_settings_page() { 
 	global $wp_roles;
 
-	$message = mc_save_capabilities();
+	if ( isset( $_POST['_wpnonce' ] ) )
+		$message = mc_save_capabilities();
+	else
+		$message = '';
 
 	$role_names = $wp_roles->get_names();
 	$roles = array();
@@ -45,8 +48,6 @@ function mc_capabilities_settings_page() {
 	if ( !empty( $message ) )
 		echo '<div id="message" class="updated fade"><p>' . $message . '</p></div>';
 
-
-
 	if ( empty( $post_types ) ) :
 		echo '<p>' . __( 'No custom post types registered.', 'map-cap' ) . '</p>';
 	else:
@@ -66,7 +67,7 @@ function mc_capabilities_settings_page() {
 				<h4><?php printf( __( "Publish %s", 'map-cap' ), $post_type_details->labels->name ); ?></h4>
 				<?php foreach ( $roles as $role ): ?>
 				<label for="<?php echo $post_type . '-' . $role->name; ?>-publish">
-					<input type="checkbox" id="<?php echo $post_type . '-' . $role->name; ?>-publish" name="<?php echo $post_type . '-' . $role->name; ?>-publish"<?php checked( $role->capabilities[ $post_type_caps->publish_posts ], 1 ); ?> />
+					<input type="checkbox" id="<?php echo $post_type . '-' . $role->name; ?>-publish" name="<?php echo $post_type . '-' . $role->name; ?>-publish"<?php checked( @$role->capabilities[ $post_type_caps->publish_posts ], 1 ); ?> />
 					<?php echo $role->display_name; ?>
 				</label>
 				<?php endforeach; ?>
@@ -77,7 +78,7 @@ function mc_capabilities_settings_page() {
 				<h4><?php printf( __( "Edit Own %s", 'map-cap' ), $post_type_details->labels->name  ); ?></h4>
 				<?php foreach ( $roles as $role ): ?>
 				<label for="<?php echo $post_type . '-' . $role->name; ?>-edit">
-				  	<input type="checkbox" id="<?php echo $post_type . '-' . $role->name; ?>-edit" name="<?php echo $post_type . '-' . $role->name; ?>-edit"<?php checked( $role->capabilities[ 'edit_published_' . $post_type_cap . '_posts' ], 1 ); ?> />
+				  	<input type="checkbox" id="<?php echo $post_type . '-' . $role->name; ?>-edit" name="<?php echo $post_type . '-' . $role->name; ?>-edit"<?php checked( @$role->capabilities[ 'edit_published_' . $post_type_cap . '_posts' ], 1 ); ?> />
 					<?php echo $role->display_name; ?>
 				</label>
 				<?php endforeach; ?>
@@ -88,7 +89,7 @@ function mc_capabilities_settings_page() {
 				<h4><?php printf( __( "Edit Others' %s", 'map-cap' ), $post_type_details->labels->name  ); ?></h4>
 				<?php foreach ( $roles as $role ): ?>
 				<label for="<?php echo $post_type . '-' . $role->name; ?>-edit-others">
-					<input type="checkbox" id="<?php echo $post_type . '-' . $role->name; ?>-edit-others" name="<?php echo $post_type . '-' . $role->name; ?>-edit-others"<?php checked( $role->capabilities[ $post_type_caps->edit_others_posts ], 1 ); ?> />
+					<input type="checkbox" id="<?php echo $post_type . '-' . $role->name; ?>-edit-others" name="<?php echo $post_type . '-' . $role->name; ?>-edit-others"<?php checked( @$role->capabilities[ $post_type_caps->edit_others_posts ], 1 ); ?> />
 					<?php echo $role->display_name; ?>
 				</label>
 				<?php endforeach; ?>
@@ -99,7 +100,7 @@ function mc_capabilities_settings_page() {
 				<h4><?php printf( __( "View Private %s", 'map-cap' ), $post_type_details->labels->name  ); ?></h4>
 				<?php foreach ( $roles as $role ): ?>
 				<label for="<?php echo $post_type . '-' . $role->name; ?>-private">
-					<input type="checkbox" id="<?php echo $post_type . '-' . $role->name; ?>-private" name="<?php echo $post_type . '-' . $role->name; ?>-private"<?php checked( $role->capabilities[ $post_type_caps->read_private_posts], 1 ); ?> />
+					<input type="checkbox" id="<?php echo $post_type . '-' . $role->name; ?>-private" name="<?php echo $post_type . '-' . $role->name; ?>-private"<?php checked( @$role->capabilities[ $post_type_caps->read_private_posts], 1 ); ?> />
 					<?php echo $role->display_name; ?>
 				</label>
 				<?php endforeach; ?>
@@ -122,7 +123,7 @@ function mc_capabilities_settings_page() {
 function mc_save_capabilities() {
 	global $wp_roles;
 
-    if ( !$_POST['_wpnonce' ] || !check_admin_referer( 'mc_capabilities_settings' ) || !current_user_can( 'manage_options' ) )
+    if ( ! check_admin_referer( 'mc_capabilities_settings' ) || ! current_user_can( 'manage_options' ) )
 		return;
 
 	$role_names = $wp_roles->get_names();
