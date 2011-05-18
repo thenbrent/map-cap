@@ -67,7 +67,7 @@ function mc_capabilities_settings_page() {
 				<h4><?php printf( __( "Publish %s", 'map-cap' ), $post_type_details->labels->name ); ?></h4>
 				<?php foreach ( $roles as $role ): ?>
 				<label for="<?php echo $post_type . '-' . $role->name; ?>-publish">
-					<input type="checkbox" id="<?php echo $post_type . '-' . $role->name; ?>-publish" name="<?php echo $post_type . '-' . $role->name; ?>-publish"<?php checked( @$role->capabilities[ $post_type_caps->publish_posts ], 1 ); ?> />
+					<input type="checkbox" id="<?php echo $post_type . '-' . $role->name; ?>-publish" name="<?php echo $post_type . '-' . $role->name; ?>-publish"<?php checked( isset( $role->capabilities[ $post_type_caps->publish_posts ] ), 1 ); ?> />
 					<?php echo $role->display_name; ?>
 				</label>
 				<?php endforeach; ?>
@@ -78,7 +78,7 @@ function mc_capabilities_settings_page() {
 				<h4><?php printf( __( "Edit Own %s", 'map-cap' ), $post_type_details->labels->name  ); ?></h4>
 				<?php foreach ( $roles as $role ): ?>
 				<label for="<?php echo $post_type . '-' . $role->name; ?>-edit">
-				  	<input type="checkbox" id="<?php echo $post_type . '-' . $role->name; ?>-edit" name="<?php echo $post_type . '-' . $role->name; ?>-edit"<?php checked( @$role->capabilities[ 'edit_published_' . $post_type_cap . 's' ], 1 ); ?> />
+				  	<input type="checkbox" id="<?php echo $post_type . '-' . $role->name; ?>-edit" name="<?php echo $post_type . '-' . $role->name; ?>-edit"<?php checked( isset( $role->capabilities[ $post_type_caps->edit_published_posts ] ), 1 ); ?> />
 					<?php echo $role->display_name; ?>
 				</label>
 				<?php endforeach; ?>
@@ -89,7 +89,7 @@ function mc_capabilities_settings_page() {
 				<h4><?php printf( __( "Edit Others' %s", 'map-cap' ), $post_type_details->labels->name  ); ?></h4>
 				<?php foreach ( $roles as $role ): ?>
 				<label for="<?php echo $post_type . '-' . $role->name; ?>-edit-others">
-					<input type="checkbox" id="<?php echo $post_type . '-' . $role->name; ?>-edit-others" name="<?php echo $post_type . '-' . $role->name; ?>-edit-others"<?php checked( @$role->capabilities[ $post_type_caps->edit_others_posts ], 1 ); ?> />
+					<input type="checkbox" id="<?php echo $post_type . '-' . $role->name; ?>-edit-others" name="<?php echo $post_type . '-' . $role->name; ?>-edit-others"<?php checked( isset( $role->capabilities[ $post_type_caps->edit_others_posts ] ), 1 ); ?> />
 					<?php echo $role->display_name; ?>
 				</label>
 				<?php endforeach; ?>
@@ -100,7 +100,7 @@ function mc_capabilities_settings_page() {
 				<h4><?php printf( __( "View Private %s", 'map-cap' ), $post_type_details->labels->name  ); ?></h4>
 				<?php foreach ( $roles as $role ): ?>
 				<label for="<?php echo $post_type . '-' . $role->name; ?>-private">
-					<input type="checkbox" id="<?php echo $post_type . '-' . $role->name; ?>-private" name="<?php echo $post_type . '-' . $role->name; ?>-private"<?php checked( @$role->capabilities[ $post_type_caps->read_private_posts], 1 ); ?> />
+					<input type="checkbox" id="<?php echo $post_type . '-' . $role->name; ?>-private" name="<?php echo $post_type . '-' . $role->name; ?>-private"<?php checked( isset( $role->capabilities[ $post_type_caps->read_private_posts] ), 1 ); ?> />
 					<?php echo $role->display_name; ?>
 				</label>
 				<?php endforeach; ?>
@@ -147,20 +147,26 @@ function mc_save_capabilities() {
 			$post_type_details = get_post_type_object( $post_type );
 			$post_type_cap 	= $post_type_details->capability_type;
 			$post_type_caps	= $post_type_details->cap;
+			$post_role		= $post_type.'-'.$key;
 
 			// Shared capability required to see post's menu & publish posts
-			if ( @$_POST[ $post_type . '-' . $key . '-publish' ] == 'on' || @$_POST[ $post_type . '-' . $key . '-edit' ] == 'on' || @$_POST[ $post_type . '-' . $key . '-edit-others' ] == 'on' ) {
+			if ( ( isset( $_POST[ $post_role.'-publish' ] ) && $_POST[ $post_role.'-publish' ] == 'on' ) || ( isset( $_POST[ $post_role.'-edit' ] ) && $_POST[ $post_role.'-edit' ] == 'on' ) || ( isset( $_POST[ $post_role.'-edit-others' ] ) && $_POST[ $post_role.'-edit-others' ] == 'on' ) ) {
 				$role->add_cap( $post_type_caps->edit_posts );
+			} else {
+				$role->remove_cap( $post_type_caps->edit_posts );
+			}
+
+			// Allow publish
+			if ( isset( $_POST[ $post_role.'-publish' ] ) && $_POST[ $post_role.'-publish' ] == 'on' ) {
 				$role->add_cap( $post_type_caps->publish_posts );
 				$role->add_cap( $post_type_caps->delete_posts );
 			} else {
-				$role->remove_cap( $post_type_caps->edit_posts );
 				$role->remove_cap( $post_type_caps->publish_posts );
 				$role->remove_cap( $post_type_caps->delete_posts );
 			}
 
 			// Allow editing own posts
-			if ( @$_POST[ $post_type . '-' . $key . '-edit' ] == 'on' || @$_POST[ $post_type . '-' . $key . '-edit-others' ] == 'on' ) {
+			if ( ( isset( $_POST[ $post_role.'-edit' ] ) && $_POST[ $post_role.'-edit' ] == 'on' ) || ( isset( $_POST[ $post_role.'-edit-others' ] ) && $_POST[ $post_role.'-edit-others' ] == 'on' ) ) {
 				$role->add_cap( $post_type_caps->edit_published_posts );
 				$role->add_cap( $post_type_caps->edit_private_posts );
 				$role->add_cap( $post_type_caps->delete_published_posts );
@@ -173,7 +179,7 @@ function mc_save_capabilities() {
 			}
 
 			// Allow editing other's posts
-			if ( @$_POST[ $post_type . '-' . $key . '-edit-others' ] == 'on' ){
+			if ( isset( $_POST[ $post_role.'-edit-others' ] ) && $_POST[ $post_role.'-edit-others' ] == 'on' ) {
 				$role->add_cap( $post_type_caps->edit_others_posts );
 				$role->add_cap( $post_type_caps->delete_others_posts );
 			} else {
@@ -182,7 +188,7 @@ function mc_save_capabilities() {
 			}
 
 			// Allow reading private
-			if ( @$_POST[ $post_type . '-' . $key . '-private' ] == 'on' )
+			if ( isset( $_POST[ $post_role.'-private' ] ) && $_POST[ $post_role.'-private' ] == 'on' )
 				$role->add_cap( $post_type_caps->read_private_posts);
 			else
 				$role->remove_cap( $post_type_caps->read_private_posts );
@@ -191,3 +197,20 @@ function mc_save_capabilities() {
     return 'Settings saved';
 }
 
+
+/** 
+ * If a post author doesn't have permission to edit their own custom post types, they are redirected
+ * to the post.php page, but what if they don't have permission to edit vanilla posts? WP Breaks. 
+ *
+ * This is a bit cludgy, so this function redirects them to that post type's admin index page and adds 
+ * a message to show post was published.
+ */
+function mc_post_access_denied_redirect() {
+	global $pagenow;
+
+	if( $pagenow == 'edit.php' ) { // @TODO find a way to determine this with better specificity
+		wp_redirect( add_query_arg( array( 'updated' => 1 ), admin_url( 'index.php' ) ) );
+		exit;
+	}
+}
+add_action( 'admin_page_access_denied', 'mc_post_access_denied_redirect', 20 ); //run after other functions
