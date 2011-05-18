@@ -141,7 +141,7 @@ function mc_save_capabilities() {
 	$post_types = array_diff( $post_types, $dont_touch );
 
 	foreach ( $roles as $key => $role ) {
-		
+
 		foreach( $post_types as $post_type ) {
 
 			$post_type_details = get_post_type_object( $post_type );
@@ -152,33 +152,33 @@ function mc_save_capabilities() {
 			if ( @$_POST[ $post_type . '-' . $key . '-publish' ] == 'on' || @$_POST[ $post_type . '-' . $key . '-edit' ] == 'on' || @$_POST[ $post_type . '-' . $key . '-edit-others' ] == 'on' ) {
 				$role->add_cap( $post_type_caps->edit_posts );
 				$role->add_cap( $post_type_caps->publish_posts );
-				$role->add_cap( $post_type_caps->delete_post . 's');
+				$role->add_cap( $post_type_caps->delete_posts );
 			} else {
 				$role->remove_cap( $post_type_caps->edit_posts );
 				$role->remove_cap( $post_type_caps->publish_posts );
-				$role->remove_cap( $post_type_caps->delete_post . 's');
+				$role->remove_cap( $post_type_caps->delete_posts );
 			}
 
 			// Allow editing own posts
 			if ( @$_POST[ $post_type . '-' . $key . '-edit' ] == 'on' || @$_POST[ $post_type . '-' . $key . '-edit-others' ] == 'on' ) {
-				$role->add_cap( 'edit_published_' . $post_type_cap . 's' );
-				$role->add_cap( 'edit_private_' . $post_type_cap . 's' );
-				$role->add_cap( 'delete_published_' . $post_type_cap . 's' );
-				$role->add_cap( 'delete_private_' . $post_type_cap . 's' );
+				$role->add_cap( $post_type_caps->edit_published_posts );
+				$role->add_cap( $post_type_caps->edit_private_posts );
+				$role->add_cap( $post_type_caps->delete_published_posts );
+				$role->add_cap( $post_type_caps->delete_private_posts );
 			} else {
-				$role->remove_cap( 'edit_published_' . $post_type_cap . 's' );
-				$role->remove_cap( 'edit_private_' . $post_type_cap . 's' );
-				$role->remove_cap( 'delete_published_' . $post_type_cap . 's' );
-				$role->remove_cap( 'delete_private_' . $post_type_cap . 's' );
+				$role->remove_cap( $post_type_caps->edit_published_posts );
+				$role->remove_cap( $post_type_caps->edit_private_posts );
+				$role->remove_cap( $post_type_caps->delete_published_posts );
+				$role->remove_cap( $post_type_caps->delete_private_posts );
 			}
 
 			// Allow editing other's posts
 			if ( @$_POST[ $post_type . '-' . $key . '-edit-others' ] == 'on' ){
 				$role->add_cap( $post_type_caps->edit_others_posts );
-				$role->add_cap( 'delete_others_' . $post_type_cap . 's' );
+				$role->add_cap( $post_type_caps->delete_others_posts );
 			} else {
 				$role->remove_cap( $post_type_caps->edit_others_posts );
-				$role->remove_cap( 'delete_others_' . $post_type_cap . 's' );
+				$role->remove_cap( $post_type_caps->delete_others_posts );
 			}
 
 			// Allow reading private
