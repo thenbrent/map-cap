@@ -156,13 +156,18 @@ function mc_save_capabilities() {
 				$role->remove_cap( $post_type_caps->edit_posts );
 			}
 
+			// Shared capability required to delete posts
+			if ( ( isset( $_POST[ $post_role.'-publish' ] ) && $_POST[ $post_role.'-publish' ] == 'on' ) || ( isset( $_POST[ $post_role.'-edit' ] ) && $_POST[ $post_role.'-edit' ] == 'on' ) ) {
+				$role->add_cap( $post_type_caps->delete_posts );
+			} else {
+				$role->remove_cap( $post_type_caps->delete_posts );
+			}
+
 			// Allow publish
 			if ( isset( $_POST[ $post_role.'-publish' ] ) && $_POST[ $post_role.'-publish' ] == 'on' ) {
 				$role->add_cap( $post_type_caps->publish_posts );
-				$role->add_cap( $post_type_caps->delete_posts );
 			} else {
 				$role->remove_cap( $post_type_caps->publish_posts );
-				$role->remove_cap( $post_type_caps->delete_posts );
 			}
 
 			// Allow editing own posts
