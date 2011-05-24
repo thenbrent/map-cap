@@ -37,23 +37,31 @@ function mc_capabilities_settings_page() {
 
 	$post_types = get_post_types( array( 'public' => true, '_builtin' => false ) );
 	$dont_touch = get_post_types( array( 'capability_type' => 'post' ) );
+	$not_mapped = get_post_types( array( 'map_meta_cap' => false ) );
 
 	// Don't edit capabilties for any custom post type with "post" as its capability type
 	$post_types = array_diff( $post_types, $dont_touch );
+	// For mapping capabilities, post type needs to have map_meta_cap set to true
+	$mapped_post_types = array_diff( $post_types, $not_mapped );
 
 	echo '<div class="wrap map-cap-settings">';
 	screen_icon();
 	echo '<h2>' . __( 'Map Capabilities', 'map-cap' ) . '</h2>';
 
-	if ( !empty( $message ) )
+	if ( ! empty( $message ) )
 		echo '<div id="message" class="updated fade"><p>' . $message . '</p></div>';
 
-	if ( empty( $post_types ) ) :
-		echo '<p>' . __( 'No custom post types registered.', 'map-cap' ) . '</p>';
-	else:
+	// Start of the Map Meta Cap settings form
+	if( ! empty( $post_types ) || ! empty( $not_mapped ) )
 		echo '<form id="map-cap-form" method="post" action="">';
 
-		foreach( $post_types as $post_type ) {
+	if ( empty( $mapped_post_types ) ) : ?>
+		<h3><?php _e( 'Map Caps', 'map-cap' ); ?></h3>
+		<p><?php _e( 'No custom post types have been registered with a custom capability, public argument set to true and the map_meta_cap argument set to true.', 'map-cap' ) ?></p>
+		<p><?php printf( __( 'Try creating custom post types with the %sCustom Post Type UI plugin%s.', 'map-cap' ), '<a href="http://wordpress.org/extend/plugins/custom-post-type-ui/">', '</a>' )?></p>
+	<?php
+	else:
+		foreach( $mapped_post_types as $post_type ) {
 			
 			$post_type_details 	= get_post_type_object( $post_type );
 			$post_type_cap 		= $post_type_details->capability_type;
@@ -106,13 +114,36 @@ function mc_capabilities_settings_page() {
 				<?php endforeach; ?>
 			</div>
 		<?php } ?>
-		<p class="submit">
-			<input type="submit" name="submit" class="button button-primary" value="<?php _e( 'Save', 'map-cap' ); ?>" />
-		</p>
-		</form>
 		<?php
+	endif; 
+
+	if( ! empty( $not_mapped ) ) :
+	?>
+	<h3><?php _e( 'Force Mapping', 'map-cap' ); ?></h3>
+	<p><?php _e( 'The following is a list of all public custom post types registered on your site with a custom capability. Those unchecked are not using the WordPress meta capability system.', 'map-cap' ); ?></p>
+	<p><?php _e( 'Check a post type to have Map Cap attempt to allow you to map capabilities for these post types. For this to work, the post type must be registered on the init hook with a priority less than 10,000.', 'map-cap' ); ?></p>
+	<h4><?php _e( 'Custom Post Types', 'map-cap' ); ?></h4>
+	<div class="map-cap">
+	<?php foreach( $post_types as $post_type ) :
+		$post_type_details 	= get_post_type_object( $post_type );
+		?>
+			<label for="<?php echo $post_type; ?>-map">
+				<input type="checkbox" id="<?php echo $post_type; ?>-map" name="<?php echo $post_type; ?>-map"<?php checked( $post_type_details->map_meta_cap, 1 ); ?> />
+				<?php echo $post_type_details->labels->name; ?>
+			</label>
+	<?php endforeach; ?>
+	<?php endif;
+
+	if( ! empty( $post_types ) || ! empty( $not_mapped ) ) :
+	?>
+	<p class="submit">
+		<input type="submit" name="submit" class="button button-primary" value="<?php _e( 'Save', 'map-cap' ); ?>" />
+	</p>
+	</div>
+	</form>
+	</div>
+	<?php
 	endif;
-	echo '</div>';
 }
 
 
