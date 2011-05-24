@@ -1,10 +1,10 @@
 <?php
 /*
 Plugin Name: Map Cap
-Plugin URI: https://github.com/thenbrent/map-cap
+Plugin URI: http://wordpress.org/tags/map-cap
 Description: Control who can publish, edit and delete custom post types.  Silly name, useful code.
 Author: Brent Shepherd
-Version: 1.1
+Version: 2.0
 Author URI: http://find.brentshepherd.com/
 */
 
@@ -21,11 +21,6 @@ add_action( 'admin_menu', 'mc_add_admin_menu' );
  **/
 function mc_capabilities_settings_page() { 
 	global $wp_roles;
-
-	if ( isset( $_POST['_wpnonce' ] ) )
-		$message = mc_save_capabilities();
-	else
-		$message = '';
 
 	$role_names = $wp_roles->get_names();
 	$roles = array();
@@ -48,12 +43,11 @@ function mc_capabilities_settings_page() {
 	screen_icon();
 	echo '<h2>' . __( 'Map Capabilities', 'map-cap' ) . '</h2>';
 
-	if ( ! empty( $message ) )
-		echo '<div id="message" class="updated fade"><p>' . $message . '</p></div>';
-
 	// Start of the Map Meta Cap settings form
-	if( ! empty( $post_types ) || ! empty( $not_mapped ) )
+	if( ! empty( $post_types ) || ! empty( $mapped_post_types ) ) {
 		echo '<form id="map-cap-form" method="post" action="">';
+		wp_nonce_field( 'mc_capabilities_settings', 'mc_nonce' );
+	}
 
 	if ( empty( $mapped_post_types ) ) : ?>
 		<h3><?php _e( 'Map Caps', 'map-cap' ); ?></h3>
@@ -67,7 +61,6 @@ function mc_capabilities_settings_page() {
 			$post_type_cap 		= $post_type_details->capability_type;
 			$post_type_caps		= $post_type_details->cap;
 
-			wp_nonce_field( 'mc_capabilities_settings' );
 			?>
 			<h3><?php printf( __( '%s Capabilities', 'map-cap' ), $post_type_details->labels->name ); ?></h3>
 			<?php // Allow publish ?>
@@ -117,11 +110,11 @@ function mc_capabilities_settings_page() {
 		<?php
 	endif; 
 
-	if( ! empty( $not_mapped ) ) :
+	if( ! empty( $post_types ) ) :
 	?>
 	<h3><?php _e( 'Force Mapping', 'map-cap' ); ?></h3>
-	<p><?php _e( 'The following is a list of all public custom post types registered on your site with a custom capability. Those unchecked are not using the WordPress meta capability system.', 'map-cap' ); ?></p>
-	<p><?php _e( 'Check a post type to have Map Cap attempt to allow you to map capabilities for these post types. For this to work, the post type must be registered on the init hook with a priority less than 10,000.', 'map-cap' ); ?></p>
+	<p><?php _e( 'The following is a list of all public custom post types registered on your site with a custom capability.', 'map-cap' ); ?></p>
+	<p><?php _e( 'Check a post type to have Map Cap attempt to allow you to map capabilities for these post types.', 'map-cap' ); ?></p>
 	<h4><?php _e( 'Custom Post Types', 'map-cap' ); ?></h4>
 	<div class="map-cap">
 	<?php foreach( $post_types as $post_type ) :
@@ -139,7 +132,6 @@ function mc_capabilities_settings_page() {
 	<p class="submit">
 		<input type="submit" name="submit" class="button button-primary" value="<?php _e( 'Save', 'map-cap' ); ?>" />
 	</p>
-	</div>
 	</form>
 	</div>
 	<?php
@@ -154,7 +146,7 @@ function mc_capabilities_settings_page() {
 function mc_save_capabilities() {
 	global $wp_roles;
 
-    if ( ! check_admin_referer( 'mc_capabilities_settings' ) || ! current_user_can( 'manage_options' ) )
+    if ( ! isset( $_POST['mc_nonce'] ) || ! check_admin_referer( 'mc_capabilities_settings', 'mc_nonce' ) || ! current_user_can( 'manage_options' ) )
 		return;
 
 	$role_names = $wp_roles->get_names();
@@ -167,13 +159,29 @@ function mc_save_capabilities() {
 
 	$post_types = get_post_types( array( 'public' => true, '_builtin' => false ) );
 	$dont_touch = get_post_types( array( 'capability_type' => 'post' ) );
+	$not_mapped = get_post_types( array( 'map_meta_cap' => false ) );
 
 	// Don't edit capabilties for any custom post type with "post" as its capability type
 	$post_types = array_diff( $post_types, $dont_touch );
 
+	$force_map_types = get_option( 'mc_force_map_meta_cap', array() );
+
+	foreach( $post_types as $post_type ) {
+		// Shared capability required to see post's menu & publish posts
+		if ( ( isset( $_POST[ $post_type.'-map' ] ) && $_POST[ $post_type.'-map' ] == 'on' ) ) {
+			$force_map_types[$post_type] = true;
+		} else {
+			$force_map_types[$post_type] = false;
+		}
+	}
+	update_option( 'mc_force_map_meta_cap', $force_map_types );
+
+	// For mapping capabilities, post type needs to have map_meta_cap set to true
+	$mapped_post_types = array_diff( $post_types, $not_mapped );
+
 	foreach ( $roles as $key => $role ) {
 
-		foreach( $post_types as $post_type ) {
+		foreach( $mapped_post_types as $post_type ) {
 
 			$post_type_details = get_post_type_object( $post_type );
 			$post_type_cap 	= $post_type_details->capability_type;
@@ -230,8 +238,44 @@ function mc_save_capabilities() {
 				$role->remove_cap( $post_type_caps->read_private_posts );
 		}
 	}
-    return 'Settings saved';
+
+	$location = admin_url( 'options-general.php?page=mapcap&updated=1' );
+	wp_safe_redirect( $location );
+	exit;
 }
+add_action( 'admin_init', 'mc_save_capabilities' );
+
+
+/**
+ * If a post type has been registered without setting map meta cap to true, Map Cap offers
+ * the end user a check box to attempt to force the post type to allow meta capability mapping.
+ *
+ * To force meta capability mapping, this function sets the map_meta_cap flag to true and
+ * updates the post type's capabilities to use all primitive capabilities.
+ **/
+function mc_force_map_meta_cap() {
+	global $wp_post_types;
+	
+	$force_map_types = get_option( 'mc_force_map_meta_cap', array() );
+
+	foreach( $force_map_types as $post_type => $force_mapping ) {
+
+		// Set the post type to map meta capabilities
+		$wp_post_types[$post_type]->map_meta_cap = $force_mapping;
+
+		// Spoof a capabilities array for the get_post_type_capabilities function
+		$wp_post_types[$post_type]->capabilities = array();
+		foreach( $wp_post_types[$post_type]->cap as $key => $cap )
+			$wp_post_types[$post_type]->capabilities[$key] = $cap;
+
+		// Update the post type's capabilities to include the primitive capabilities required by map_meta_cap
+		$wp_post_types[$post_type]->cap = get_post_type_capabilities( $wp_post_types[$post_type] );
+
+		// Remove the spoofed capabilities array
+		unset($wp_post_types[$post_type]->capabilities);
+	}
+}
+add_action( 'init', 'mc_force_map_meta_cap', 10000 );
 
 
 /** 
@@ -250,3 +294,4 @@ function mc_post_access_denied_redirect() {
 	}
 }
 add_action( 'admin_page_access_denied', 'mc_post_access_denied_redirect', 20 ); //run after other functions
+
