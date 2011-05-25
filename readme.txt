@@ -34,8 +34,8 @@ The post type must:
 
 1. be public
 1. not be a built-in post type eg. page & post
-1. use a custom capability type (not the default capability of *post*)
-1. be registered with the `map_meta_cap` argument set to true - the default is false and without this parameter set to true, WordPress does not apply meta capabilities, such as delete post
+1. use a custom capability type (not the default capability of *post*). This is done when registering the Custom Post Type. In the `$args` array you pass to the `register_post_type` function, your plugin must have `capability_type =>` set to something other than post.
+1. be registered with the `map_meta_cap` argument set to `true` - the default is `false`. Without this parameter set to `true`, WordPress does not map any meta capabilities.
 
 = Force Mapping =
 
@@ -43,11 +43,9 @@ As many custom post types do not set the `map_meta_cap` to true, Map Cap offers 
 
 For this to work, the plugin must register the post type on the `init` hook with a priority less than 10,000. 
 
-If registering your own custom post type in code, the `$args` array you pass to `register_post_type` function must have `capability_type =>` set to something other than post and the `map_meta_cap => true`.
-
 This feature works with the [Custom Post Type UI plugin](http://wordpress.org/extend/plugins/custom-post-type-ui/) plugin but is not guaranteed to work with any other plugins.
 
-= Using with the Custom Post Type UI plugin? =
+= Using the Custom Post Type UI plugin? =
 
 If you are using the [Custom Post Type UI plugin](http://wordpress.org/extend/plugins/custom-post-type-ui/), when adding a custom post type, you must click *View Advanced Options* and change *Capability Type* to something other than *post*. For example, for a custom post type of *Stories* the capability could be *story*.
 
