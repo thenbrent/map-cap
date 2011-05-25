@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Map Cap
-Plugin URI: http://wordpress.org/tags/map-cap
+Plugin URI: https://github.com/thenbrent/map-cap
 Description: Control who can publish, edit and delete custom post types.  Silly name, useful code.
 Author: Brent Shepherd
 Version: 2.0
@@ -113,8 +113,8 @@ function mc_capabilities_settings_page() {
 	if( ! empty( $post_types ) ) :
 	?>
 	<h3><?php _e( 'Force Mapping', 'map-cap' ); ?></h3>
-	<p><?php _e( 'The following is a list of all public custom post types registered on your site with a custom capability.', 'map-cap' ); ?></p>
-	<p><?php _e( 'Check a post type to have Map Cap attempt to allow you to map capabilities for these post types.', 'map-cap' ); ?></p>
+	<p><?php _e( 'Select a post type below to have Map Cap attempt to map its capabilities.', 'map-cap' ); ?></p>
+	<p><?php printf( __( "If this does not work, please read the %splugin's FAQ%s for possible causes.", 'map-cap' ), '<a href="http://wordpress.org/extend/plugins/map-cap/faq/">', '</a>' ); ?></p>
 	<h4><?php _e( 'Custom Post Types', 'map-cap' ); ?></h4>
 	<div class="map-cap">
 	<?php foreach( $post_types as $post_type ) :
