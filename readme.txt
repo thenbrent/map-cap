@@ -13,13 +13,8 @@ Using custom post types on your site?
 
 Install this plugin to control which roles can publish, edit and delete posts of each custom type. 
 
-For this plugin to work, your custom post type must have the `map_meta_cap` [argument](http://codex.wordpress.org/Function_Reference/register_post_type#Arguments) set to true (the default is false).
+For this plugin to work, your custom post type must meet a number of requirements as outlined in the [FAQ](http://wordpress.org/extend/plugins/map-cap/faq/).
 
-= For Plugin Developers =
-
-Prior to version 3.1, WordPress did not map meta capabilities for custom post types. This plugin offered a way to do that. 
-
-If you're developing a plugin that uses custom post types, WordPress 3.1 and later includes the functionality as explained in the [Capabiltiies](http://codex.wordpress.org/Function_Reference/register_post_type) section of the [Register Post Type](http://codex.wordpress.org/Function_Reference/register_post_type) codex article. 
 
 == Installation ==
 
@@ -27,6 +22,7 @@ If you're developing a plugin that uses custom post types, WordPress 3.1 and lat
 1. Upload the `map-cap` folder to the `/wp-content/plugins/` directory
 1. Activate the plugin through the `Plugins` menu in WordPress
 1. Navigate to `Map Cap` under the `Settings` menu to set capabilities
+
 
 == Frequently Asked Questions ==
 
@@ -36,20 +32,31 @@ There are four requirements for a custom post type to show up in Map Cap's setti
 
 The post type must:
 
-1. be set to public
-1. not be built-in eg. page & post
-1. use a custom capability type (not the default post capability)
+1. be public
+1. not be a built-in post type eg. page & post
+1. use a custom capability type (not the default capability of *post*)
 1. be registered with the `map_meta_cap` argument set to true - the default is false and without this parameter set to true, WordPress does not apply meta capabilities, such as delete post
 
-If you are using the [Custom Post Type UI plugin](http://wordpress.org/extend/plugins/custom-post-type-ui/), when adding a custom post type, you must click *View Advanced Options* and change *Capability Type* to something other than post.
+= Force Mapping =
 
-As many custom post types do not set the `map_meta_cap` to true, Map Cap offers an option to change the value of the `map_meta_cap`.  For this to work, the plugin developer must register the post type on the init hook with a priority less than 10,000. This does work with the [Custom Post Type UI plugin](http://wordpress.org/extend/plugins/custom-post-type-ui/) plugin but is not guaranteed to work with any other plugins.
+As many custom post types do not set the `map_meta_cap` to true, Map Cap offers an option to change the value of the `map_meta_cap`. 
+
+For this to work, the plugin must register the post type on the `init` hook with a priority less than 10,000. 
 
 If registering your own custom post type in code, the `$args` array you pass to `register_post_type` function must have `capability_type =>` set to something other than post and the `map_meta_cap => true`.
+
+This feature works with the [Custom Post Type UI plugin](http://wordpress.org/extend/plugins/custom-post-type-ui/) plugin but is not guaranteed to work with any other plugins.
+
+= Using with the Custom Post Type UI plugin? =
+
+If you are using the [Custom Post Type UI plugin](http://wordpress.org/extend/plugins/custom-post-type-ui/), when adding a custom post type, you must click *View Advanced Options* and change *Capability Type* to something other than *post*. For example, for a custom post type of *Stories* the capability could be *story*.
+
+You then need select the custom post type under the *Force Mapping* section of the Map Cap settings page.
 
 = Where can I report bugs? =
 
 Add a new post in the WordPress.org [Plugin's Support Forum](http://wordpress.org/tags/map-cap).
+
 
 == Screenshots ==
 
@@ -69,5 +76,5 @@ Add a new post in the WordPress.org [Plugin's Support Forum](http://wordpress.or
 
 == Upgrade Notice ==
 
-= 1.1 =
+= 2.0 =
 * Important Upgrade to fix a variety of issues with deleting posts and drafts. Requires WordPress 3.1+
