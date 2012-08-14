@@ -1,6 +1,6 @@
 # Map Cap
 
-Control who can publish, edit and delete custom post types.  Silly name, useful code.
+Control who can publish, edit and delete custom post types on a WordPress site.  Silly name, useful code.
 
 ## Description
 
@@ -53,7 +53,9 @@ Add a new post in the WordPress.org [Plugin's Support Forum](http://wordpress.or
 ## Screenshots
 
 ![Map Cap Screenshot](https://raw.github.com/thenbrent/map-cap/master/screenshot-1.png "Admin Map Cap Settings Page")
- **Admin Map Cap Settings Page** - Site administrators can choose the capabilities each role has for each custom post type.
+### Admin Map Cap Settings Page
+
+Site administrators can choose the capabilities each role has for each custom post type.
 
 ## Changelog
 
