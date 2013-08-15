@@ -63,6 +63,7 @@ Add a new post in the WordPress.org [Plugin's Support Forum](http://wordpress.or
 == Changelog ==
 
 = 2.1 =
+* Fix 'Invalid argument supplied for foreach() in map-cap.php on line 268' when deactivating a plugin or theme which registered the custom post type Map Cap was operating on
 
 = 2.0 =
 * Changing capabilities for custom posts with "post" capability type no longer allowed

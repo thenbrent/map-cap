@@ -260,6 +260,9 @@ function mc_force_map_meta_cap() {
 
 	foreach( $force_map_types as $post_type => $force_mapping ) {
 
+		if ( ! isset( $wp_post_types[$post_type] ) )
+			continue;
+
 		// Set the post type to map meta capabilities
 		$wp_post_types[$post_type]->map_meta_cap = $force_mapping;
 
