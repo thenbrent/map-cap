@@ -9,7 +9,7 @@ Author URI: http://find.brentshepherd.com/
 */
 
 function mc_add_admin_menu() {
-	if ( function_exists('add_options_page') ) { // additional pages under E-Commerce
+	if ( function_exists('add_options_page') ) {
 		$page = add_options_page( 'Map Caps', 'Map Cap', 'manage_options', 'mapcap', 'mc_capabilities_settings_page' );
 	}
 }
