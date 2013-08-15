@@ -77,5 +77,8 @@ Add a new post in the WordPress.org [Plugin's Support Forum](http://wordpress.or
 
 == Upgrade Notice ==
 
+= 2.1 =
+* Important Upgrade to fix potential 'Invalid argument supplied for foreach() in map-cap.php on line 268' notices
+
 = 2.0 =
 * Important Upgrade to fix a variety of issues with deleting posts and drafts. Requires WordPress 3.1+
