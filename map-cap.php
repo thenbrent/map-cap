@@ -4,7 +4,7 @@ Plugin Name: Map Cap
 Plugin URI: https://github.com/thenbrent/map-cap
 Description: Control who can publish, edit and delete custom post types.  Silly name, useful code.
 Author: Brent Shepherd
-Version: 2.0
+Version: 2.1
 Author URI: http://find.brentshepherd.com/
 */
 

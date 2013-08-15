@@ -3,7 +3,7 @@ Contributors: thenbrent
 Tags: capabilities, roles, custom post types
 Requires at least: 3.1
 Tested up to: 3.1
-Stable tag: 2.0
+Stable tag: 2.1
 
 Control who can publish, edit and delete custom post types.  Silly name, useful code.
 
@@ -61,6 +61,8 @@ Add a new post in the WordPress.org [Plugin's Support Forum](http://wordpress.or
 1. **Admin Map Cap Settings Page** - Site administrators can choose the capabilities each role has for each custom post type.
 
 == Changelog ==
+
+= 2.1 =
 
 = 2.0 =
 * Changing capabilities for custom posts with "post" capability type no longer allowed
