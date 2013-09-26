@@ -303,7 +303,7 @@ add_action( 'admin_page_access_denied', 'mc_post_access_denied_redirect', 20 ); 
  */
 function mc_i18n_support() {
 	load_plugin_textdomain(
-		'msls',
+		'map-cap',
 		false,
 		dirname( plugin_basename( __FILE__ ) ) . '/languages/'
 	);
