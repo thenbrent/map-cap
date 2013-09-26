@@ -1,0 +1,95 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Map Cap 2.1\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/multisite-language-switcher\n"
+"POT-Creation-Date: 2013-09-26 15:30+0100\n"
+"PO-Revision-Date: 2013-09-26 15:54+0100\n"
+"Last-Translator: \n"
+"Language-Team: Dennis Ploetner <re@lloc.de>\n"
+"Language: German (de_DE)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;"
+"_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_ex:1,2c;"
+"esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-Basepath: .\n"
+"X-Generator: Poedit 1.5.5\n"
+"X-Poedit-SearchPath-0: ..\n"
+
+#: ../map-cap.php:44
+msgid "Map Capabilities"
+msgstr ""
+
+#: ../map-cap.php:53
+msgid "Map Caps"
+msgstr ""
+
+#: ../map-cap.php:54
+msgid ""
+"No custom post types have been registered with a custom capability, public "
+"argument set to true and the map_meta_cap argument set to true."
+msgstr ""
+"Es ist kein Custom Post Types mit anpassbaren Ausführungsrechten registriert "
+"(public und  map_meta_cap auf true gesetzt)."
+
+#: ../map-cap.php:55
+#, php-format
+msgid "Try creating custom post types with the %sCustom Post Type UI plugin%s."
+msgstr ""
+"Probiere das Erstellen von Custom Post Types mit dem %sCustom Post Type UI "
+"plugin%s."
+
+#: ../map-cap.php:65
+#, php-format
+msgid "%s Capabilities"
+msgstr ""
+
+#: ../map-cap.php:68
+#, php-format
+msgid "Publish %s"
+msgstr ""
+
+#: ../map-cap.php:79
+#, php-format
+msgid "Edit Own %s"
+msgstr ""
+
+#: ../map-cap.php:90
+#, php-format
+msgid "Edit Others' %s"
+msgstr ""
+
+#: ../map-cap.php:101
+#, php-format
+msgid "View Private %s"
+msgstr ""
+
+#: ../map-cap.php:115
+msgid "Force Mapping"
+msgstr "Erzwinge Mapping"
+
+#: ../map-cap.php:116
+msgid ""
+"Select a post type below to have Map Cap attempt to map its capabilities."
+msgstr ""
+"Markiere einen der untenstehenden Post Typen, um das Map Cap-Plugin für das "
+"Mappen der Ausführungsrechte zu verwenden."
+
+#: ../map-cap.php:117
+#, php-format
+msgid ""
+"If this does not work, please read the %splugin's FAQ%s for possible causes."
+msgstr ""
+"Wenn dies nicht funktioniert, lese bitte die %sFAQs des Plugins%s, um die "
+"Ursache heraus zu finden."
+
+#: ../map-cap.php:118
+msgid "Custom Post Types"
+msgstr "Custom Post Types"
+
+#: ../map-cap.php:133
+msgid "Save"
+msgstr "Speichern"
