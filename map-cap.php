@@ -298,3 +298,14 @@ function mc_post_access_denied_redirect() {
 }
 add_action( 'admin_page_access_denied', 'mc_post_access_denied_redirect', 20 ); //run after other functions
 
+/**
+ * Load textdomain
+ */
+function mc_i18n_support() {
+	load_plugin_textdomain(
+		'msls',
+		false,
+		dirname( plugin_basename( __FILE__ ) ) . '/languages/'
+	);
+}
+add_action( 'plugins_loaded', 'mc_i18n_support' );
